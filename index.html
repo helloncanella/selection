@@ -57,7 +57,7 @@
       }
 
       function activeEvents(argument) {
-        var startPoint, endPoint, isMouseDown = false;
+        var startPoint, endPoint, isMouseDown = false, start, end;
 
         $('.match').on({
           mousedown: function(){
@@ -69,7 +69,16 @@
               endPoint = $(this).data('offset');
             }
 
-            color($(this),startPoint, endPoint);
+            start = startPoint ? startPoint : $(this).data('offset');
+            end = endPoint ? endPoint : start;
+
+            if((end-start) < 0){
+              var changed = changePosition(start, end);
+              start = changed['start'];
+              end = changed['end'];
+            }
+
+            color(start, end);
 
           },
           mouseleave: function(){
@@ -81,32 +90,28 @@
 
         $(window).mouseup(function(){
           restartVariables();
+          discolorAll();
+
+          var text = getText(start, end);
+          console.log(text);
+
         });
+
+        function getText(start, end){
+          var text='';
+          for(var i = start; i <= end; i++){
+            text += $('#item-'+i).text();
+          };
+          return text;
+        }
 
         function restartVariables (){
           startPoint = endPoint = null;
           isMouseDown = false;
         }
 
-        function color(selector,start, end){
+        function color(start, end){
           discolorAll();
-
-          if(!end){
-            end = start;
-          }
-
-          if(!start){
-            start = selector.data('offset');
-          }
-
-          if((end-start) < 0){
-
-            var changed = changePosition(start, end);
-            start = changed['start'];
-            end = changed['end'];
-
-            console.log(start, end);
-          }
 
           for (var i = start; i <= end; i++) {
             $('#item-'+i).css({
