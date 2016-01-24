@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+
+<body>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit? Sint, repellat eveniet corporis sapiente voluptas dolore provident optio in
+  <script>
+    var i = 0;
+    function replacer(match) {
+      i++;
+      return '<span data-offset=\'' + i + '\'>' + match + '</span>';
+    }
+    var newString = 'Lorem ipsum dolor sit amet,'.replace(/((?:\b(=?[,\.\?]?\s+|\w+)\b)|[\?\.\,])/g, replacer);
+    console.log(newString);
+  </script>
+</body>
+
+</html>
