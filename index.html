@@ -4,18 +4,139 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <style>
+
+    *{
+      -webkit-user-select:none;
+    }
+
+    .player-timedtext span{
+      cursor: default;
+    }
+
+  </style>
 </head>
 
+
+
 <body>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit? Sint, repellat eveniet corporis sapiente voluptas dolore provident optio in
+  <!-- Netflix subtilte simulation -->
+  <div class="player-timedtext">
+    <div class="player-timedtext-text-container"><span>Dan Foxworthy is, like,</span></div>
+    <div class="player-timedtext-text-container"><span>the super-exclusive</span></div>
+  </div>
+
+  <script src="http://localhost:4500/livereload.js" charset="utf-8"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js" charset="utf-8"></script>
+
   <script>
-    var i = 0;
-    function replacer(match) {
-      i++;
-      return '<span data-offset=\'' + i + '\'>' + match + '</span>';
-    }
-    var newString = 'Lorem ipsum dolor sit amet,'.replace(/((?:\b(=?[,\.\?]?\s+|\w+)\b)|[\?\.\,])/g, replacer);
-    console.log(newString);
+
+
+
+    $('.player-timedtext').mouseenter(function(e){
+      var children = $(this).children();
+      var counter = 0;
+
+      children.each(function (index,element) {
+        var spanChild = $(this).children('span');
+        var newText = replace(spanChild.text());
+
+        spanChild.html(newText);
+      });
+
+      $(this).off('mouseenter');
+      activeEvents();
+
+      function replace (text){
+        var regex = /((?:\b(=?[,\.\?]?\s+|\w+)\b)|[\?\.\,])/g;
+        var newText = text.replace(regex, function(match){
+          counter++;
+          return '<span class=\'match\' id=\'item-'+counter+'\' data-offset=\'' + counter + '\'>' + match + '</span>';
+        });
+        return newText;
+      }
+
+      function activeEvents(argument) {
+        var startPoint, endPoint, isMouseDown = false;
+
+        $('.match').on({
+          mousedown: function(){
+            isMouseDown = true;
+            startPoint = $(this).data('offset');
+          },
+          mouseenter: function(){
+            if(isMouseDown){
+              endPoint = $(this).data('offset');
+            }
+
+            color($(this),startPoint, endPoint);
+
+          },
+          mouseleave: function(){
+            if(!isMouseDown){
+              discolorAll();
+            }
+          }
+        });
+
+        $(window).mouseup(function(){
+          restartVariables();
+        });
+
+        function restartVariables (){
+          startPoint = endPoint = null;
+          isMouseDown = false;
+        }
+
+        function color(selector,start, end){
+          discolorAll();
+
+          if(!end){
+            end = start;
+          }
+
+          if(!start){
+            start = selector.data('offset');
+          }
+
+          if((end-start) < 0){
+
+            var changed = changePosition(start, end);
+            start = changed['start'];
+            end = changed['end'];
+
+            console.log(start, end);
+          }
+
+          for (var i = start; i <= end; i++) {
+            $('#item-'+i).css({
+              'background':'blue',
+              'color':'white'
+            });
+          }
+
+        }
+
+        function discolorAll(){
+          $('.player-timedtext *').css({
+            'background':'none',
+            'color': 'black'
+          })
+        }
+
+        function changePosition(start, end) {
+          var copy = start;
+
+          start = end;
+          end = copy;
+
+          return {"start": start, "end": end}
+        }
+
+      }
+    });
+
+
   </script>
 </body>
 
