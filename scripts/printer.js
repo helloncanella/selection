@@ -25,6 +25,7 @@ function printTranslation(selection) {
   var language = to;
 
   getJSON(url).then(function(data) {
+    console.log(data);
     var terms;
     var translation = data.sentences[0].trans;
 
