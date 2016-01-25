@@ -1,0 +1,13 @@
+*{
+  -webkit-user-select:none;
+  .player-timedtext span{
+    cursor: default;
+  }
+}
+
+html, body{
+  background: #FFFFD9;
+}
+
+iframe{
+}

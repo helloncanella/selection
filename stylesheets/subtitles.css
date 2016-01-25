@@ -1,0 +1,26 @@
+.player-timedtext {
+  position: absolute;
+  left: 642px;
+  top: 600px;
+  right: 642px;
+  bottom: 0px;
+  display: block;
+}
+
+.player-timedtext-text-container{
+  display: block;
+  white-space: nowrap;
+  text-align: center;
+  left: 29.7468%;
+  bottom: 10%;
+}
+
+.player-timedtext-text-container>span{
+  font-size: 30px;
+  line-height: normal;
+  font-weight: normal;
+  color: yellow;
+  text-shadow: #000000 0px 0px 13px;
+  font-family: Arial,Helvetica;
+  font-weight: bolder;
+}

@@ -3,142 +3,58 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
-  <style>
+  <title>Immersion</title>
 
-    *{
-      -webkit-user-select:none;
-    }
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="stylesheets/global.css">
+  <link rel="stylesheet" href="stylesheets/subtitles.css">
+  <link rel="stylesheet" href="stylesheets/tabs.css">
 
-    .player-timedtext span{
-      cursor: default;
-    }
-
-  </style>
 </head>
-
-
 
 <body>
   <!-- Netflix subtilte simulation -->
   <div class="player-timedtext">
-    <div class="player-timedtext-text-container"><span>Dan Foxworthy is, like,</span></div>
-    <div class="player-timedtext-text-container"><span>the super-exclusive</span></div>
+    <div class="player-timedtext-text-container">
+      <span>Dan Foxworthy is, like,</span>
+    </div>
+    <div class="player-timedtext-text-container">
+      <span>the super-exclusive</span>
+    </div>
+  </div>
+
+  <div id='balloon'>
+    <ul id="tabs">
+      <li><a href="#" title="tab1">Translation</a></li>
+      <li><a href="#" title="tab2">Images</a></li>
+    </ul>
+
+    <div id="content">
+      <div id="tab1">
+        <div id="Translation">
+          <div class="wrapper"></div>
+        </div>
+      </div>
+      <div id="tab2">
+        <div id="Image">
+          <div class="wrapper">
+            <iframe width='500' height='220' src="" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="http://localhost:4500/livereload.js" charset="utf-8"></script>
   <script src="bower_components/jquery/dist/jquery.min.js" charset="utf-8"></script>
-
-  <script>
-    $('.player-timedtext').mouseenter(function(e){
-      var children = $(this).children();
-      var counter = 0;
-
-      children.each(function (index,element) {
-        var spanChild = $(this).children('span');
-        var newText = replace(spanChild.text());
-
-        spanChild.html(newText);
-      });
-
-      $(this).off('mouseenter');
-      activeEvents();
-
-      function replace (text){
-        var regex = /((?:\b(=?[,\.\?]?\s+|\w+)\b)|[\?\.\,])/g;
-        var newText = text.replace(regex, function(match){
-          counter++;
-          return '<span class=\'match\' id=\'item-'+counter+'\' data-offset=\'' + counter + '\'>' + match + '</span>';
-        });
-        return newText;
-      }
-
-      function activeEvents(argument) {
-        var startPoint, endPoint, isMouseDown = false, start, end;
-
-        $('.match').on({
-          mousedown: function(){
-            isMouseDown = true;
-            startPoint = $(this).data('offset');
-          },
-          mouseenter: function(){
-            if(isMouseDown){
-              endPoint = $(this).data('offset');
-            }
-
-            start = startPoint ? startPoint : $(this).data('offset');
-            end = endPoint ? endPoint : start;
-
-            if((end-start) < 0){
-              var changed = changePosition(start, end);
-              start = changed['start'];
-              end = changed['end'];
-            }
-
-            color(start, end);
-
-          },
-          mouseleave: function(){
-            if(!isMouseDown){
-              discolorAll();
-            }
-          }
-        });
-
-        $(window).mouseup(function(){
-          restartVariables();
-          discolorAll();
-
-          var text = getText(start, end);
-
-        });
-
-        function getText(start, end){
-          var text='';
-          for(var i = start; i <= end; i++){
-            text += $('#item-'+i).text();
-          };
-          return text;
-        }
-
-        function restartVariables (){
-          startPoint = endPoint = null;
-          isMouseDown = false;
-        }
-
-        function color(start, end){
-          discolorAll();
-
-          for (var i = start; i <= end; i++) {
-            $('#item-'+i).css({
-              'background':'blue',
-              'color':'white'
-            });
-          }
-
-        }
-
-        function discolorAll(){
-          $('.player-timedtext *').css({
-            'background':'none',
-            'color': 'black'
-          })
-        }
-
-        function changePosition(start, end) {
-          var copy = start;
-
-          start = end;
-          end = copy;
-
-          return {"start": start, "end": end}
-        }
-
-      }
-    });
+  <script src="vendors/URI.js"></script>
+  <script src="vendors/jsonp.js"></script>
+  <script src="scripts/tabs.js" charset="utf-8"></script>
+  <script src="scripts/printer.js" charset="utf-8"></script>
+  <script src="scripts/selection.js" charset="utf-8"></script>
 
 
-  </script>
 </body>
 
 </html>
