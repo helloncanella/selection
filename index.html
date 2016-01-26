@@ -11,43 +11,67 @@
   <link rel="stylesheet" href="stylesheets/subtitles.css">
   <link rel="stylesheet" href="stylesheets/tabs.css">
 
-
+ 
 </head>
-
+ 
 <body>
+  
   <!-- Netflix subtilte simulation -->
   <div class="player-timedtext">
     <div class="player-timedtext-text-container">
-      <span>Dan Foxworthy is, like,</span>
+      <span>I prefer the best ideas </span>
     </div>
     <div class="player-timedtext-text-container">
-      <span>the super-exclusive</span>
+      <span>of the best men</span>
     </div>
   </div>
 
   <div id='balloon'>
     <ul id="tabs">
-      <li><a href="#" title="tab1">Translation</a></li>
-      <li><a href="#" title="tab2">Images</a></li>
+      <li class='definition-tab'><a href="#" title="tab1">Definition</a></li>
+      <li class='translation-tab'><a href="#" title="tab2">Translation</a></li>
+      <li class='images-tab'><a href="#" title="tab3">Images</a></li>
     </ul>
 
     <div id="content">
       <div id="tab1">
-        <div id="Translation">
-          <div class="wrapper"></div>
-        </div>
-      </div>
-      <div id="tab2">
-        <div id="Image">
+        <div id="Definition" class='definition-tab'>
           <div class="wrapper">
-            <iframe width='500' height='220' src="" frameborder="0"></iframe>
+            <div class="head">
+              <h3 class='word'></h3>  
+            </div>
+            <div class="body"></div>
+            <div class="footer">
+              <a href="">
+                <img width="16" height="16" class="wordnik-icon" src="images/wordnik.png">
+                More at Wordnik
+              </a>
+              |
+              <span id='dictionary'></span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div id="tab2" class='translation-tab'>
+        <div id="Translation">
+          <div class="wrapper">
+            <div class="head">
+              <h3 class='word'></h3>  
+            </div>
+            <div class="body"></div>
+          </div>
+        </div>
+      </div>
+      <div id="tab3" class='images-tab'> 
+        <div id="Image">
+          <div class="wrapper">
+            <iframe width='500' height='400' src="" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
+    </div> 
   </div>
-
-  <script src="http://localhost:4500/livereload.js" charset="utf-8"></script>
+ 
   <script src="bower_components/jquery/dist/jquery.min.js" charset="utf-8"></script>
   <script src="vendors/URI.js"></script>
   <script src="vendors/jsonp.js"></script>
@@ -55,7 +79,10 @@
   <script src="scripts/printer.js" charset="utf-8"></script>
   <script src="scripts/selection.js" charset="utf-8"></script>
 
-
+  <script type='text/javascript' id="__bs_script__">//<![CDATA[
+    document.write("<script async src='http://HOST:8082/browser-sync/browser-sync-client.2.11.1.js'><\/script>".replace("HOST", location.hostname));
+//]]></script>
+  
 </body>
 
 </html>

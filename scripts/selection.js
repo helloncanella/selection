@@ -1,13 +1,13 @@
-/*global $, window, printTranslation,searchImage*/
+/*global $, window, printResult, setWordHeader,printTranslation,searchImage, printDefinitions, showAllTabs*/
 /*jshint -W003*/
 'use strict';
 
-var startPoint,  endPoint, isMouseDown = false, start, end;
+var startPoint, endPoint, isMouseDown = false,
+  start, end;
 
 $('.player-timedtext').mouseenter(function() {
   var children = $(this).children();
   var counter = 0;
-
   children.each(function() {
     var spanChild = $(this).children('span');
     var newText = replace(spanChild.text());
@@ -53,21 +53,24 @@ $('.player-timedtext').mouseenter(function() {
 
       },
       mouseleave: function() {
-        if (!isMouseDown) {discolorAll();}
+        if (!isMouseDown) {
+          discolorAll();
+        }
+      },
+
+      mouseup: function() {
+        restartVariables();
+        discolorAll();
+
+        var text = getText(start, end);
+
+        if (text) {
+          showAllTabs();
+          printResult(text);
+        }
       }
     });
 
-    $(window).mouseup(function() {
-      restartVariables();
-      discolorAll();
-
-      var text = getText(start, end);
-
-      if (text) {
-        printTranslation(text);
-        searchImage(text);
-      }
-    });
 
   }
 
@@ -87,12 +90,20 @@ $('.player-timedtext').mouseenter(function() {
   function color(start, end) {
     discolorAll();
 
-    for (var i = start; i <= end; i++) {$('#item-' + i).css({'background': 'blue', 'color': 'white'});}
+    for (var i = start; i <= end; i++) {
+      $('#item-' + i).css({
+        'background': 'blue',
+        'color': 'white'
+      });
+    }
 
   }
 
   function discolorAll() {
-    $('.player-timedtext span').css({'background': 'none', 'color': 'yellow'});
+    $('.player-timedtext span').css({
+      'background': 'none',
+      'color': 'yellow'
+    });
   }
 
   function changePosition(start, end) {
@@ -101,6 +112,9 @@ $('.player-timedtext').mouseenter(function() {
     start = end;
     end = copy;
 
-    return {'start': start, 'end': end};
+    return {
+      'start': start,
+      'end': end
+    };
   }
 });

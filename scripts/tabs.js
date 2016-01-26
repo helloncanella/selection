@@ -1,14 +1,29 @@
 /*global $*/
 'use strict';
 
-$('#content>div').hide(); // Initially hide all content
-$('#tabs li:first').attr('id','current'); // Activate first tab
-$('#content div:first').fadeIn(); // Show first tab content
+function hide(element) {
+  
+  var selector = $(element);
+  
+  selector.hide();
+  // selector.siblings()[0].children('a').trigger('click');
+  console.log(selector.siblings());
+}
+
+function showAllTabs() {
+  $('#tabs li').fadeIn();
+  $('#content>div').hide(); // Initially hide all content
+  $('#tabs li:first').attr('id', 'current'); // Activate first tab
+  $('#content div:first').fadeIn(); // Show first tab content
+}
+
+showAllTabs();
+
 
 $('#tabs a').click(function(e) {
-    e.preventDefault();
-    $('#content>div').hide(); //Hide all content
-    $('#tabs li').attr('id',''); //Reset id's
-    $(this).parent().attr('id','current'); // Activate this
-    $('#' + $(this).attr('title')).fadeIn(); // Show content for current tab
+  e.preventDefault();
+  $('#content>div').hide(); //Hide all content
+  $('#tabs li').attr('id', ''); //Reset id's
+  $(this).parent().attr('id', 'current'); // Activate this
+  $('#' + $(this).attr('title')).fadeIn(); // Show content for current tab
 });

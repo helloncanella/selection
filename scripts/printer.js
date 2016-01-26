@@ -1,9 +1,9 @@
-/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window*/
+/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide*/
 /*jshint -W109, -W003, -W098*/
 'use strict';
 var from = 'en';
 var to = 'pt-BR';
-var soundIcon = "<div class='sound'></div>";
+var soundIcon = "<div class='sound'><i class=\'fa fa-play-circle\'></i></div>";
 
 $(document).on('click', '.sound', function() {
   var language = $(this).data('language');
@@ -11,41 +11,108 @@ $(document).on('click', '.sound', function() {
   voice(language, expression);
 });
 
-function printWord(selection) {
+$(document).on('mouseup', '.definition',function(){
+  var selection = window.getSelection().toString();
+  if(selection){
+    printResult(selection);
+  }
+})
+
+function printResult(selection){
+  setWordHeader(selection);
+  printTranslation(selection);
+  searchImage(selection);
+  printDefinitions(selection);
+}
+
+
+function setWordHeader(selection){
+  $('.head .sound').remove();
+  
+  var language = from;
+  
+  $('.head h3.word').text(selection.toLowerCase());
+  $('.head').append(soundIcon);
+  $('.head .sound').attr({
+    'data-language': language,
+    'data-expression': selection
+  });
+}
+
+function printDefinitions(selection) {
+  var url = 'http://api.wordnik.com/v4/word.json/' + selection + '/definitions?limit=6&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
   var language = from;
 
-  $('#Word .wrapper').html('').append("<div class='expression'>" +
-    "<p>" + selection + "</p>" + soundIcon + '</p>' + "</div>");
+  getJSON(url).then(function(data) {
+    $('#Definition .body').html('');
+    
+    if (data.length === 0) {
+      // hide($('.definition-tab'));
+    }
+    else {
+      
+      $('#Definition .body').append('<ul></ul>');
+      $('#Definition .footer a').attr('href','http://www.wordnik.com/words/'+selection);
+      
+      var dictionary = data[0].attributionText;
+      $('#Definition .footer #dictionary').text(dictionary);
 
-  $('#Word .wrapper .sound').attr({'data-language': language, 'data-expression': selection});
+      var definitions = data;
+     
+      definitions.forEach(function(definition, i) {
+        var partOfSpeech = definition.partOfSpeech;
+        var text = definition.text;
+
+        $('#Definition .body ul').append("<li class='item-" + i + " expression'>" + "<div class=\'part-of-speech\'>" + partOfSpeech + '. </div><div class=\'definition\'>' + text + "</div></li>");
+      });
+    }
+
+  })
+
+
 }
 
 function printTranslation(selection) {
-  var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&hl=' + from + '&tl=' + to + '&dt=t&dt=bd&dj=1&source=input&tk=402644.402644&q=' + selection + '';
+  var url = 'http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&hl=' + from + '&tl=' + to + '&dt=t&dt=bd&dj=1&source=input&tk=402644.402644&q=' + selection + '';
   var language = to;
 
   getJSON(url).then(function(data) {
-    console.log(data);
+
+
     var terms;
     var translation = data.sentences[0].trans;
 
-    $('#Translation .wrapper').html('');
+    $('#Translation .body').html('');
 
     if (data.dict) {
       terms = data.dict[0].terms;
-      $('#Translation .wrapper').append('<ol></ol>');
+      $('#Translation .body').append('<ol></ol>');
     }
 
-    if (terms && terms.length > 0) {terms.forEach(function(term, i) {
-        $('#Translation .wrapper ol').append("<li class='item-" + i + " expression'>" + "<p>" + (i + 1) + '. ' + term + "</p>" + soundIcon + "</li>");
+    if (terms && terms.length > 0) {
+      terms.forEach(function(term, i) {
+        $('#Translation .body ol').append("<li class='item-" + i + " expression'>" +soundIcon+ "<p>" + term + "</p></li>");
 
-        $('#Translation .wrapper ol .item-' + i + ' .sound').attr({'data-language': language, 'data-expression': term});
-      });} else if (translation) {$('#Translation .wrapper').append("<div class='expression'>" +
+        $('#Translation .body ol .item-' + i + ' .sound').attr({
+          'data-language': language,
+          'data-expression': term
+        });
+      });
+    }
+    else if (translation) {
+      $('#Translation .body').append("<div class='expression'>" +
         "<p>" + translation + "</p>" + soundIcon + "</div>");
 
-      $('#Translation .wrapper .sound').attr({'data-language': language, 'data-expression': translation});} else {$('#Translation .wrapper').append(selection);}
+      $('#Translation .body .sound').attr({
+        'data-language': language,
+        'data-expression': translation
+      });
+    }
+    else {
+      $('#Translation .body').append(selection);
+    }
 
-  });
+  })
 }
 
 function searchImage(selection) {
@@ -57,16 +124,18 @@ function getJSON(url) {
 
   return new Promise(function(resolve, reject) {
     $.jsonp({
-      url: url, corsSupport: true, // if URL above supports CORS (optional)
+      url: url,
+      corsSupport: true, // if URL above supports CORS (optional)
       jsonpSupport: true, // if URL above supports JSONP (optional)
 
       success: function(data) {
         resolve(data);
       },
       error: function(error) {
-        reject(error);
-      }
-      // error, etc.
+          console.warn('ERRO');
+          reject(error);
+        }
+        // error, etc.
     });
   });
 
@@ -86,6 +155,8 @@ function voice(language, text) {
     if (language === voices[i].lang) {
       msg.voice = voices[i];
     }
+    
+    //console.log(voices[i].lang);
   }
 
   msg.text = String(text);

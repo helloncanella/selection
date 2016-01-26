@@ -1,13 +1,14 @@
 *{
   -webkit-user-select:none;
-  .player-timedtext span{
-    cursor: default;
-  }
 }
+
+.player-timedtext span{
+  cursor: default;
+}
+
 
 html, body{
-  background: #FFFFD9;
+  background: #FFFFD9; 
 }
 
-iframe{
-}
+
