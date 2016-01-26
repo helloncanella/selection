@@ -1,4 +1,4 @@
-/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide, hideDefinitionTab*/
+/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide, hideDefinitionTab, showAllTabs*/
 /*jshint -W109, -W003, -W098*/
 'use strict';
 var from = 'en';
@@ -24,6 +24,7 @@ function printResult(selection) {
   printTranslation(selection);
   searchImage(selection);
   printDefinitions(selection);
+  // search(selection);
 }
 
 
@@ -62,7 +63,7 @@ function printDefinitions(selection) {
 
       results.forEach(function(result, i) {
 
-        var posAbbr = getPoSAbbr(result.partOfSpeech) // get part-of-speech abbreviation
+        var posAbbr = getPoSAbbr(result.partOfSpeech)  // get part-of-speech abbreviation
 
         var text = filter(result.text);
 
@@ -115,7 +116,7 @@ function printDefinitions(selection) {
         abbr = 'abbr';
       }
       else {
-        abbr = partOfSpeech;
+        abbr = '';
       }
 
       return abbr + '.';
@@ -195,8 +196,14 @@ function printTranslation(selection) {
 
 function searchImage(selection) {
   var url = 'https://duckduckgo.com/?q=' + selection + '&iax=1&ia=images';
-  $('.wrapper iframe').attr('src', url);
+  $('#Image .wrapper iframe').attr('src', url);
 }
+
+
+// function search(selection){
+//   var url = 'https://duckduckgo.com;
+//   $('#Search .wrapper iframe').attr('src', url);
+// }
 
 function getJSON(url) {
 
