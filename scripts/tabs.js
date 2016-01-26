@@ -1,13 +1,10 @@
 /*global $*/
 'use strict';
 
-function hide(element) {
-  
-  var selector = $(element);
-  
-  selector.hide();
-  // selector.siblings()[0].children('a').trigger('click');
-  console.log(selector.siblings());
+function hideDefinitionTab() {
+  $('.definition-tab').hide();
+  $('#tabs li').attr('id', '');
+  $('.translation-tab a').trigger('click');
 }
 
 function showAllTabs() {
@@ -20,7 +17,7 @@ function showAllTabs() {
 showAllTabs();
 
 
-$('#tabs a').click(function(e) {
+$(document).on('click', '#tabs a', function(e) {
   e.preventDefault();
   $('#content>div').hide(); //Hide all content
   $('#tabs li').attr('id', ''); //Reset id's

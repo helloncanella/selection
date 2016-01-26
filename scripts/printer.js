@@ -1,4 +1,4 @@
-/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide*/
+/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide, hideDefinitionTab*/
 /*jshint -W109, -W003, -W098*/
 'use strict';
 var from = 'en';
@@ -19,6 +19,7 @@ $(document).on('mouseup', '.definition',function(){
 })
 
 function printResult(selection){
+  showAllTabs();
   setWordHeader(selection);
   printTranslation(selection);
   searchImage(selection);
@@ -47,7 +48,7 @@ function printDefinitions(selection) {
     $('#Definition .body').html('');
     
     if (data.length === 0) {
-      // hide($('.definition-tab'));
+      hideDefinitionTab();
     }
     else {
       
