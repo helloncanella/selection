@@ -1,14 +1,17 @@
 /*global $*/
 'use strict';
 
+//XXX - clean/refine it
 function hideDefinitionTab() {
-  $('.definition-tab').hide();
   $('#tabs li').attr('id', '');
+  $('#tabs li:first').hide();
+  $('#content div:first').hide();
   $('.translation-tab a').trigger('click');
 }
 
 function showAllTabs() {
   $('#tabs li').fadeIn();
+  $('#tabs li').attr('id', ''); //Reset id's
   $('#content>div').hide(); // Initially hide all content
   $('#tabs li:first').attr('id', 'current'); // Activate first tab
   $('#content div:first').fadeIn(); // Show first tab content

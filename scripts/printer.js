@@ -11,14 +11,14 @@ $(document).on('click', '.sound', function() {
   voice(language, expression);
 });
 
-$(document).on('mouseup', '.definition',function(){
+$(document).on('mouseup', '.definition, .definition *', function() {
   var selection = window.getSelection().toString();
-  if(selection){
+  if (selection) {
     printResult(selection);
   }
 })
 
-function printResult(selection){
+function printResult(selection) {
   showAllTabs();
   setWordHeader(selection);
   printTranslation(selection);
@@ -27,11 +27,11 @@ function printResult(selection){
 }
 
 
-function setWordHeader(selection){
+function setWordHeader(selection) {
   $('.head .sound').remove();
-  
+
   var language = from;
-  
+
   $('.head h3.word').text(selection.toLowerCase());
   $('.head').append(soundIcon);
   $('.head .sound').attr({
@@ -46,29 +46,107 @@ function printDefinitions(selection) {
 
   getJSON(url).then(function(data) {
     $('#Definition .body').html('');
-    
+
     if (data.length === 0) {
       hideDefinitionTab();
     }
     else {
-      
+
       $('#Definition .body').append('<ul></ul>');
-      $('#Definition .footer a').attr('href','http://www.wordnik.com/words/'+selection);
-      
+      $('#Definition .footer a').attr('href', 'http://www.wordnik.com/words/' + selection);
+
       var dictionary = data[0].attributionText;
       $('#Definition .footer #dictionary').text(dictionary);
 
-      var definitions = data;
-     
-      definitions.forEach(function(definition, i) {
-        var partOfSpeech = definition.partOfSpeech;
-        var text = definition.text;
+      var results = data;
 
-        $('#Definition .body ul').append("<li class='item-" + i + " expression'>" + "<div class=\'part-of-speech\'>" + partOfSpeech + '. </div><div class=\'definition\'>' + text + "</div></li>");
+      results.forEach(function(result, i) {
+
+        var posAbbr = getPoSAbbr(result.partOfSpeech) // get part-of-speech abbreviation
+
+        var text = filter(result.text);
+
+        var area = text.area;
+        var definition = text.definition;
+        var example = text.example;
+
+        $('#Definition .body ul').append("<li class='item-" + i + " expression'>" + "<span class=\'part-of-speech\'>" + posAbbr + '</span><span class=\'definition\'> <em class=\'area\'>' + area + ' </em>' + definition + "<em class='example'> " + example + "</em></span></li>");
       });
     }
 
-  })
+    function getPoSAbbr(partOfSpeech) {
+      
+      var abbr;
+      
+      if (/noun/i.test(partOfSpeech)) {
+        abbr = 'n';
+      }
+      else if (/pronoun/i.test(partOfSpeech)) {
+        abbr = 'pron';
+      }
+      else if (/adjective/i.test(partOfSpeech)) {
+        abbr = 'adj';
+      }
+      else if (/phrasal-verb/i.test(partOfSpeech)) {
+        abbr = 'phrasal-verb';
+      }
+      else if (/verb/i.test(partOfSpeech)) {
+        abbr = 'v';
+      }
+      else if (/adverb/i.test(partOfSpeech)) {
+        abbr = 'adv';
+      }
+      else if (/preposition/i.test(partOfSpeech)) {
+        abbr = 'prep';
+      }
+      else if (/conjunction/i.test(partOfSpeech)) {
+        abbr = 'conj';
+      }
+      else if (/interjection/i.test(partOfSpeech)) {
+        abbr = 'interj';
+      }
+      else if (/article/i.test(partOfSpeech)) {
+        abbr = 'art';
+      }
+      else if (/idiom/i.test(partOfSpeech)) {
+        abbr = 'idiom';
+      }
+      else if (/abbreviation/i.test(partOfSpeech)) {
+        abbr = 'abbr';
+      }
+      else {
+        abbr = partOfSpeech;
+      }
+
+      return abbr + '.';
+    }
+
+    function filter(text) {
+
+      var definitionRegex;
+
+      var area = text.match(/(\w+)(?=\s{2,})/);
+      var example = text.match(/\:\s+(.+\b\.?)\s?\)?/);
+
+
+      if (example) {
+        definitionRegex = /\w+[;,.]?\s{1}\b.+\:/
+      }
+      else {
+        definitionRegex = /\w+[;,.]?\s{1}\b.+\:?/
+      }
+
+      console.log(text, text.match(definitionRegex));
+
+
+      return {
+        area: area ? area[0] : '',
+        definition: text.match(definitionRegex)[0],
+        example: example ? example[1] : ''
+      }
+    }
+
+  });
 
 
 }
@@ -92,7 +170,7 @@ function printTranslation(selection) {
 
     if (terms && terms.length > 0) {
       terms.forEach(function(term, i) {
-        $('#Translation .body ol').append("<li class='item-" + i + " expression'>" +soundIcon+ "<p>" + term + "</p></li>");
+        $('#Translation .body ol').append("<li class='item-" + i + " expression'>" + soundIcon + "<p>" + term + "</p></li>");
 
         $('#Translation .body ol .item-' + i + ' .sound').attr({
           'data-language': language,
@@ -101,8 +179,7 @@ function printTranslation(selection) {
       });
     }
     else if (translation) {
-      $('#Translation .body').append("<div class='expression'>" +
-        "<p>" + translation + "</p>" + soundIcon + "</div>");
+      $('#Translation .body').append("<div class='expression'>" + soundIcon + "<p>" + translation + "</p></div>");
 
       $('#Translation .body .sound').attr({
         'data-language': language,
@@ -156,7 +233,7 @@ function voice(language, text) {
     if (language === voices[i].lang) {
       msg.voice = voices[i];
     }
-    
+
     //console.log(voices[i].lang);
   }
 

@@ -71,7 +71,7 @@
   
 }
 
-#Definition .definition{
+#Definition .definition, #Definition .example, #Definition .area{
   -webkit-user-select: text;
 }
 
@@ -116,10 +116,18 @@ ul, ol{
 }
 
 #Definition .part-of-speech {
-  font-style: italic;
   padding-right: 1em;
   display: table-cell;
   min-width: 1em;
+}
+
+#Definition .partOfSpeech, #Definition .area, #Definition .example{
+  font-style: italic;
+}
+
+
+#Definition .example{
+  font-weight: bold;
 }
 
 #Definition .definition {
@@ -141,8 +149,14 @@ ul, ol{
   font-size:17px;
 }
 
+
+
 #Translation ol{
   padding:0;
+}
+
+div.expression{
+  margin-top:10px;
 }
 
 
@@ -151,6 +165,5 @@ ul, ol{
 
 .sound {
   display: inline-block;
-  margin-left: 5px;
   margin-bottom: -2px;
 }
