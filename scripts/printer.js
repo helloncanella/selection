@@ -1,9 +1,10 @@
-/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide, hideDefinitionTab, showAllTabs*/
+/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide, hideDefinitionTab, showAllTabs, positionBaloon*/
 /*jshint -W109, -W003, -W098*/
 'use strict';
 var from = 'en';
 var to = 'pt-BR';
 var soundIcon = "<div class='sound'><i class=\'fa fa-play-circle\'></i></div>";
+var selection = '';
 
 $(document).on('click', '.sound', function() {
   var language = $(this).data('language');
@@ -16,20 +17,26 @@ $(document).on('mouseup', '.definition, .definition *', function() {
   if (selection) {
     printResult(selection);
   }
-})
+});
 
-function printResult(selection, position) {
-  // showAllTabs();
-  // setWordHeader(selection);
-  // printTranslation(selection);
-  // searchImage(selection);
-  // printDefinitions(selection);
-  // search(selection);
-  positionBaloon(position);
+function printResult(selectioned, position) {
+  
+  selection = selectioned;
+  
+  var translate = new Promise(printTranslation);
+  var define = new Promise(printDefinitions);
+  var getImages = new Promise(searchImage);
+  
+  Promise.all([translate, define, getImages]).then(function(values) {
+    showAllTabs();
+    setWordHeader(selection);
+    positionBaloon(position);
+  });
+
 }
 
 
-function setWordHeader(selection) {
+function setWordHeader() {
   $('.head .sound').remove();
 
   var language = from;
@@ -42,7 +49,7 @@ function setWordHeader(selection) {
   });
 }
 
-function printDefinitions(selection) {
+function printDefinitions(resolve, reject) {
   var url = 'http://api.wordnik.com/v4/word.json/' + selection + '/definitions?limit=6&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
   var language = from;
 
@@ -148,18 +155,18 @@ function printDefinitions(selection) {
       }
     }
 
+  
+    resolve();
   });
 
 
 }
 
-function printTranslation(selection) {
+function printTranslation(resolve, reject) {
   var url = 'http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&hl=' + from + '&tl=' + to + '&dt=t&dt=bd&dj=1&source=input&tk=402644.402644&q=' + selection + '';
   var language = to;
 
   getJSON(url).then(function(data) {
-
-
     var terms;
     var translation = data.sentences[0].trans;
 
@@ -191,13 +198,17 @@ function printTranslation(selection) {
     else {
       $('#Translation .body').append(selection);
     }
-
+    
+    resolve();
+  
+    
   })
 }
 
-function searchImage(selection) {
+function searchImage(resolve, reject) {
   var url = 'https://duckduckgo.com/?q=' + selection + '&iax=1&ia=images';
   $('#Image .wrapper iframe').attr('src', url);
+  resolve();
 }
 
 

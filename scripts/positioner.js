@@ -1,8 +1,3 @@
-$('.player-timedtext').click(function(e) {
-  e.stopPropagation();
-
-});
-
 function positionBaloon(position) {
   $('#balloon').css({
     'top': position.y - $('#balloon').height() - 70,
@@ -12,7 +7,9 @@ function positionBaloon(position) {
 }
 
 
-$('html:not(#balloon *)').click(function(e) {
+$(document).on('click', 'body *:not(#balloon, #balloon *)', function(e) {
+  console.log(e);
+
   var balloon = $('#balloon');
 
   if (balloon.css('display') !== 'none') {
