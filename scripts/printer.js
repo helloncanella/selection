@@ -18,13 +18,14 @@ $(document).on('mouseup', '.definition, .definition *', function() {
   }
 })
 
-function printResult(selection) {
-  showAllTabs();
-  setWordHeader(selection);
-  printTranslation(selection);
-  searchImage(selection);
-  printDefinitions(selection);
+function printResult(selection, position) {
+  // showAllTabs();
+  // setWordHeader(selection);
+  // printTranslation(selection);
+  // searchImage(selection);
+  // printDefinitions(selection);
   // search(selection);
+  positionBaloon(position);
 }
 
 
