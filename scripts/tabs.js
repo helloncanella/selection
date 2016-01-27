@@ -22,15 +22,10 @@ showAllTabs();
 
 $(document).on('click', '#tabs a', function(e) {
   
-  var position ={
-    x: e.clientX,
-    y: e.clientY
-  }
-  
   e.preventDefault();
   $('#content>div').hide(); //Hide all content
   $('#tabs li').attr('id', ''); //Reset id's
   $(this).parent().attr('id', 'current'); // Activate this
   $('#' + $(this).attr('title')).fadeIn(); // Show content for current tab
-  positionBaloon(position)
+  
 });

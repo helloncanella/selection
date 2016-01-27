@@ -1,10 +1,18 @@
 function positionBaloon(position) {
-  $('#balloon').css({
-    'top': position.y - $('#balloon').height() - 70,
-    'left': position.x - $('#balloon').width() / 2,
-    'display': 'block'
-  });
+  var subtitle = $('.player-timedtext');
+  var balloon = $('#balloon');
+
+  balloon.css('bottom', $(window).height()-subtitle.offset().top + 30);
 }
+
+function showBalloon(){
+  $('#balloon').css('display', 'block');
+}
+
+
+$(document).ready(function(){
+  positionBaloon();
+})
 
 
 $(document).on('click', 'body *:not(#balloon, #balloon *)', function(e) {
@@ -14,7 +22,7 @@ $(document).on('click', 'body *:not(#balloon, #balloon *)', function(e) {
 
   if (balloon.css('display') !== 'none') {
     balloon.css({
-      'display': 'none'
+      // 'display': 'none'
     });
   }
 });

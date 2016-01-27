@@ -1,4 +1,4 @@
-/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide, hideDefinitionTab, showAllTabs, positionBaloon*/
+/*global speechSynthesis, SpeechSynthesisUtterance, $, document, window, hide, hideDefinitionTab, showAllTabs, showBalloon*/
 /*jshint -W109, -W003, -W098*/
 'use strict';
 var from = 'en';
@@ -17,20 +17,20 @@ $(document).on('mouseup', '.definition, .definition *', function() {
   if (selection) {
     printResult(selection);
   }
-});
+})
 
 function printResult(selectioned, position) {
   
   selection = selectioned;
-  
+
   var translate = new Promise(printTranslation);
   var define = new Promise(printDefinitions);
   var getImages = new Promise(searchImage);
   
-  Promise.all([translate, define, getImages]).then(function(values) {
+  Promise.all([translate, define, getImages]).then(function(values) { 
     showAllTabs();
-    setWordHeader(selection);
-    positionBaloon(position);
+    setWordHeader();
+    showBalloon();
   });
 
 }

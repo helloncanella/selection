@@ -59,12 +59,7 @@ $('.player-timedtext').mouseenter(function() {
       },
 
       mouseup: function(e) {
-        
-        var position = {
-          x: e.clientX,
-          y: e.clientY
-        }
-        
+      
         restartVariables();
         discolorAll();
 
@@ -72,7 +67,7 @@ $('.player-timedtext').mouseenter(function() {
 
         if (text) {
           showAllTabs();
-          printResult(text, position);
+          printResult(text);
         }
       }
     });
