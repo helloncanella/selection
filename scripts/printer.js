@@ -6,13 +6,16 @@ var to = 'pt-BR';
 var soundIcon = "<div class='sound'><i class=\'fa fa-play-circle\'></i></div>";
 var selection = '';
 
-$(document).on('click', '.sound', function() {
+$(document).on('click', '.sound', function(e) {
+  e.stopPropagation();
   var language = $(this).data('language');
   var expression = $(this).data('expression');
   voice(language, expression);
 });
 
-$(document).on('mouseup', '.definition, .definition *', function() {
+
+$(document).on('mouseup', '.definition, .definition *', function(e) {
+  e.stopPropagation();
   var selection = window.getSelection().toString();
   if (selection) {
     printResult(selection);

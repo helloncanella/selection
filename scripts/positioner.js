@@ -15,14 +15,21 @@ $(document).ready(function(){
 })
 
 
-$(document).on('click', 'body *:not(#balloon, #balloon *)', function(e) {
-  console.log(e);
 
+
+$(document).on('click', function(e){
+  console.log(e);
   var balloon = $('#balloon');
 
   if (balloon.css('display') !== 'none') {
     balloon.css({
-      // 'display': 'none'
+      'display': 'none'
     });
   }
 });
+
+//Cancelling the effect of event above for .definition children
+$(document).on('click', '.definition, .definition *', function(e) {
+  e.stopPropagation();
+});
+

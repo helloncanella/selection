@@ -5,7 +5,8 @@
 var startPoint, endPoint, isMouseDown = false,
   start, end;
 
-$('.player-timedtext').mouseenter(function() {
+$('.player-timedtext').mouseenter(function(e) {
+  e.stopPropagation();
   var children = $(this).children();
   var counter = 0;
   children.each(function() {
@@ -32,6 +33,7 @@ $('.player-timedtext').mouseenter(function() {
 
     $('.match').on({
       mousedown: function() {
+        e.stopPropagation();
         isMouseDown = true;
         startPoint = $(this).data('offset');
       },
@@ -52,13 +54,15 @@ $('.player-timedtext').mouseenter(function() {
         color(start, end);
 
       },
-      mouseleave: function() {
+      mouseleave: function(e) {
+        e.stopPropagation();
         if (!isMouseDown) {
           discolorAll();
         }
       },
 
       mouseup: function(e) {
+        e.stopPropagation();
       
         restartVariables();
         discolorAll();
